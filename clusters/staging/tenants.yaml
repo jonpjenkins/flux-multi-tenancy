@@ -4,6 +4,8 @@ metadata:
   name: tenants
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: kyverno-policies
   interval: 5m
   sourceRef:
     kind: GitRepository
@@ -11,4 +13,3 @@ spec:
   path: ./tenants/staging
   prune: true
   validation: client
-  
