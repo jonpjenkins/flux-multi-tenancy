@@ -5,3 +5,13 @@ metadata:
   namespace: apps
 spec:
   path: ./staging
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha2
+kind: ImagePolicy
+metadata:
+  name: gowebserver
+  namespace: apps
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^staging-[a-f0-9]+-(?P<ts>[0-9]+)

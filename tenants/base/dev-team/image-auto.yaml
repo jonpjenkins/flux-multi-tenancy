@@ -1,0 +1,45 @@
+apiVersion: image.toolkit.fluxcd.io/v1alpha2
+kind: ImageUpdateAutomation
+metadata:
+  name: gowebserver
+  namespace: apps
+spec:
+  sourceRef: # moved from `.spec.checkout`
+    kind: GitRepository
+    name: dev-team
+  interval: 30s
+  update:
+    strategy: Setters
+    path: ./staging
+  git:
+    checkout: # moved under `git`, loses `gitRepositoryRef`
+      ref:
+        branch: main # moved into `ref` struct
+    commit: # moved under `git`
+      author:
+        name: fluxbot  # moved from `authorName`
+        email: fluxbot@example.com # moved from `authorEmail`
+      messageTemplate: '{{range .Updated.Images}}{{println .}}{{end}}'
+    push: # moved under `git`
+      branch: auto
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha2
+kind: ImageRepository
+metadata:
+  name: gowebserver
+  namespace: apps
+spec:
+  image: ghcr.io/jonpjenkins/gowebserver
+  interval: 15s
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha2
+kind: ImagePolicy
+metadata:
+  name: gowebserver
+  namespace: apps
+spec:
+  imageRepositoryRef:
+    name: gowebserver
+  policy:
+    numerical:
+      order: asc
