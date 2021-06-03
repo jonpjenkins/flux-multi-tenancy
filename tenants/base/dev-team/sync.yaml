@@ -17,6 +17,7 @@ metadata:
   name: dev-team
   namespace: apps
 spec:
+  serviceAccountName: dev-team
   interval: 10s
   path: ./
   prune: false
